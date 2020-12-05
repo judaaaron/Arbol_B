@@ -4,26 +4,24 @@ import java.util.ArrayList;
 
 public class Nodo {
 
-    boolean esHoja;
+    //boolean esHoja;
     ArrayList<Integer> llaves = new ArrayList();
     ArrayList<Nodo> hijos = new ArrayList();
-   
 
     public Nodo() {
     }
 
     public Nodo(int llave) {
-     llaves.add(llave);   
+        llaves.add(llave);
     }
 
-    public boolean isEsHoja() {
-        return esHoja;
-    }
-
-    public void setEsHoja(boolean esHoja) {
-        this.esHoja = esHoja;
-    }
-
+//    public boolean isEsHoja() {
+//        return esHoja;
+//    }
+//
+//    public void setEsHoja(boolean esHoja) {
+//        this.esHoja = esHoja;
+//    }
     public ArrayList<Integer> getLlaves() {
         return llaves;
     }
@@ -40,5 +38,8 @@ public class Nodo {
         this.hijos = hijos;
     }
 
+    public boolean leaf() {
+        return hijos.isEmpty();
+    }
 
 }
