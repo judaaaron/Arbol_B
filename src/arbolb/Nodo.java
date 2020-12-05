@@ -5,8 +5,8 @@ import java.util.ArrayList;
 public class Nodo {
 
     //boolean esHoja;
-    ArrayList<Integer> llaves = new ArrayList();
-    ArrayList<Nodo> hijos = new ArrayList();
+    ArrayList<Integer> llaves = new ArrayList<>();
+    ArrayList<Nodo> hijos = new ArrayList<>();
 
     public Nodo() {
     }
