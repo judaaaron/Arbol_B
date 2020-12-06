@@ -97,7 +97,7 @@ public class TreeB {
             i++;
 
             if (x.getHijos().get(i-2).getLlaves().size() == 2 * t - 1) {
-                B_Tree_Split_Child(x, i, x.getHijos().get(i));
+                B_Tree_Split_Child(x, i, x.getHijos().get(i-2));
 
                 if (k > x.getLlaves().get(i)) {
                     i++;
