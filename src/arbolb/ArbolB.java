@@ -8,7 +8,7 @@ public class ArbolB {
 
     public static void main(String[] args) {
 
-        TreeB tb = new TreeB(5);
+        TreeB tb = new TreeB(4);
         int n = 0;
         for (int i = 1; i <= 10; i++) {
             try {
