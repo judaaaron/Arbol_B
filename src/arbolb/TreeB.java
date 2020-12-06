@@ -120,18 +120,19 @@ public class TreeB {
 
     public void imprimir_arbol(Nodo nodo_actual, int num) {
         //se debe iniciar num en 0 a la hora de llamar el metodo
+        String indent = new String(new char[1024]).replace('\0', ' ');
         for (int i = 0; i < nodo_actual.getN(); i++) {
-            if (nodo_actual.getLlaves().get(i) != null) {
-                System.out.println("llave: " + nodo_actual.getLlaves().get(i) + ", nivel:" + num);
+            if (nodo_actual.isLeaf() == false && nodo_actual.getHijos().get(i) != null) {
+                imprimir_arbol(nodo_actual.getHijos().get(i), num + 1);
             }
+            if (nodo_actual.getLlaves().get(i) != null) {
+                System.out.println(indent.substring(0, num*4) + "llave: " + nodo_actual.getLlaves().get(i) + ", nivel:" + num);
+            }
+
         }
         //si no es hoja, se llama el metodo recursivo pero ahora con su hijo
         if (nodo_actual.isLeaf() == false) {
-            for (int i = 0; i < nodo_actual.getN()+1; i++) {
-                if (nodo_actual.getHijos().get(i) != null) {
-                    imprimir_arbol(nodo_actual.getHijos().get(i), num + 1);
-                }
-            }
+            imprimir_arbol(nodo_actual.getHijos().get(nodo_actual.getN()), num + 1);
         }
     }
 
