@@ -46,6 +46,26 @@ public class TreeB {
     public int UpperBChild() {
         return m;
     }
+    
+    
+    public NodoIndice B_Tree_Search(Nodo x, int k){
+        
+        int i = 0;
+        
+        while (i <= x.getN() && k > x.getLlaves().get(i)){
+            i++;
+        }
+        
+        if (i <= x.getN() && k == x.getLlaves().get(i)) {
+            return new NodoIndice(x, i);
+        }
+        if (x.isLeaf()) {
+            return null;
+        }
+        else{
+            return B_Tree_Search(x.getHijos().get(i), k);
+        }
+    }
 
     public void insert(int k) {
         Nodo r = raiz;
@@ -72,16 +92,11 @@ public class TreeB {
             z.getLlaves().set(j, y.getLlaves().get(j + this.lowerBKeys()+1));
         }
         if (!y.isLeaf()) {
-            for (int j = 0; j < this.lowerBKeys()+1; j++) {
-                z.getHijos().set(j, y.getHijos().get(j + this.lowerBKeys()));
+            for (int j = 0; j < z.getN()+1; j++) {
+                z.getHijos().set(j, y.getHijos().get(j + this.lowerBKeys()+1));
             }
         }
         y.setN(this.lowerBKeys());
-        /*for (int j = x.getN(); j >= i+1; j--) {
-            x.getHijos().set(j+1, x.getHijos().get(j));
-        }
-        x.getHijos().set(i+1, z);
-        */
         x.getHijos().add(i+1, z);
         x.getHijos().remove(m);
         

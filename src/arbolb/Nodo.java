@@ -74,4 +74,21 @@ public class Nodo {
         return hijos.isEmpty();
     }*/
 
+    @Override
+    public String toString() {
+        if(this.getN() == 0){
+            return "";
+        }
+        String nodo = "[";
+
+        for (int i = 0; i < this.getN()-1; i++) {
+
+            nodo += this.getLlaves().get(i) + ", ";
+        }
+        nodo += this.getLlaves().get(this.getN()-1) + "]";
+        
+        return nodo;
+    }
+    
+    
 }
