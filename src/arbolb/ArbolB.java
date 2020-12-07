@@ -10,7 +10,7 @@ public class ArbolB {
 
         TreeB tb = new TreeB(4);
         int n = 0;
-        for (int i = 1; i <= 20; i++) {
+        for (int i = 1; i <= 16; i++) {
             try {
 
                 n = i;
@@ -21,7 +21,7 @@ public class ArbolB {
             tb.insert(n);
         }
         tb.imprimir_arbol(tb.raiz, 0);
-        NodoIndice ni = tb.B_Tree_Search(tb.getRaiz(), 12);
+        NodoIndice ni = tb.B_Tree_Search(tb.getRaiz(), 8);
         
         System.out.println("Nodo: " + ni.getNodo() + "| Indice: " + ni.getIndice());
 

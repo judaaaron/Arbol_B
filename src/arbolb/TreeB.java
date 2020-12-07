@@ -14,7 +14,7 @@ public class TreeB {
     public TreeB(int orden, int llave) {
         //this.t = (int) Math.floor((orden + 1) / 2);// responsabilizar a Jose.
         this.m = orden;
-        raiz = new Nodo(m,llave);
+        raiz = new Nodo(m, llave);
 
     }
 
@@ -35,34 +35,32 @@ public class TreeB {
     }
 
     public int upperBKeys() {
-        return m-1;
+        return m - 1;
     }
 
     public int lowerBKeys() {
 
-        return m/2;
+        return m / 2;
     }
 
     public int UpperBChild() {
         return m;
     }
-    
-    
-    public NodoIndice B_Tree_Search(Nodo x, int k){
-        
+
+    public NodoIndice B_Tree_Search(Nodo x, int k) {
+
         int i = 0;
-        
-        while (i <= x.getN() && k > x.getLlaves().get(i)){
+
+        while (i < x.getN() && k > x.getLlaves().get(i)) {
             i++;
         }
-        
-        if (i <= x.getN() && k == x.getLlaves().get(i)) {
+
+        if (i < x.getN() && k == x.getLlaves().get(i)) {
             return new NodoIndice(x, i);
         }
         if (x.isLeaf()) {
             return null;
-        }
-        else{
+        } else {
             return B_Tree_Search(x.getHijos().get(i), k);
         }
     }
@@ -87,35 +85,35 @@ public class TreeB {
     public void B_Tree_Split_Child(Nodo x, int i, Nodo y) {
         Nodo z = new Nodo(m);
         z.setLeaf(y.isLeaf());
-        z.setN(this.upperBKeys()-this.lowerBKeys()-1);
+        z.setN(this.upperBKeys() - this.lowerBKeys() - 1);
         for (int j = 0; j < z.getN(); j++) {
-            z.getLlaves().set(j, y.getLlaves().get(j + this.lowerBKeys()+1));
+            z.getLlaves().set(j, y.getLlaves().get(j + this.lowerBKeys() + 1));
         }
         if (!y.isLeaf()) {
-            for (int j = 0; j < z.getN()+1; j++) {
-                z.getHijos().set(j, y.getHijos().get(j + this.lowerBKeys()+1));
+            for (int j = 0; j < z.getN() + 1; j++) {
+                z.getHijos().set(j, y.getHijos().get(j + this.lowerBKeys() + 1));
             }
         }
         y.setN(this.lowerBKeys());
-        x.getHijos().add(i+1, z);
+        x.getHijos().add(i + 1, z);
         x.getHijos().remove(m);
-        
+
         x.getLlaves().add(i, y.getLlaves().get(this.lowerBKeys()));
         x.getLlaves().remove(this.upperBKeys());
-        
-        x.setN(x.getN()+1);
+
+        x.setN(x.getN() + 1);
 
     }
 
     public void B_Tree_Insert_NonFull(Nodo x, int k) {
-        int i = x.getN()-1;
+        int i = x.getN() - 1;
         if (x.isLeaf()) {
             while (i >= 0 && k < x.getLlaves().get(i)) {
                 i--;
             }
-            x.getLlaves().add(i+1,k);
+            x.getLlaves().add(i + 1, k);
             x.getLlaves().remove(this.upperBKeys());
-            x.setN(x.getN()+1);
+            x.setN(x.getN() + 1);
         } else {
             while (i >= 0 && k < x.getLlaves().get(i)) {
                 i--;
@@ -141,7 +139,7 @@ public class TreeB {
                 imprimir_arbol(nodo_actual.getHijos().get(i), num + 1);
             }
             if (nodo_actual.getLlaves().get(i) != null) {
-                System.out.println(indent.substring(0, num*4) + "llave: " + nodo_actual.getLlaves().get(i) + ", nivel:" + num);
+                System.out.println(indent.substring(0, num * 4) + "llave: " + nodo_actual.getLlaves().get(i) + ", nivel:" + num);
             }
 
         }
