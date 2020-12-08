@@ -130,6 +130,91 @@ public class TreeB {
         }
 
     }
+    
+    public Nodo Preceding_Child(Nodo x){
+        return null;
+    }
+    
+    public Nodo Successor_Child(Nodo x){
+        return null;
+    }
+    
+    public Nodo Find_Sibling (Nodo x){
+        return null;
+    }
+    
+    public void Move_Key(int k, Nodo n1, Nodo n2){
+        
+    }
+    
+    public void Merge_Nodes(Nodo n1, Nodo n2) {
+        
+    }
+    
+    public int Find_Predecessor_Key(Nodo n, int k) {
+        return 0;
+    }
+    
+    public int Find_Successor_Key(Nodo n, int k) {
+        return 0;
+    }
+    
+    public int Root_Key(Nodo n) {
+        return 0;
+    }
+    
+    public void Remove_Key(Nodo n, int k) {
+        
+    }
+    
+    public void B_Tree_Delete_Key(Nodo x,int k){
+        
+        if(!x.isLeaf()){
+            Nodo y = this.Preceding_Child(x);
+            Nodo z = this.Successor_Child(x);
+            if(y.getN() > this.lowerBKeys()){
+                int k1 = this.Find_Predecessor_Key(x, k);
+                this.Move_Key(k1, y, x);
+                this.Move_Key(k, x, z);
+                this.B_Tree_Delete_Key(z, k);
+            } else if(z.getN() > this.lowerBKeys()) {
+                int k1 = this.Find_Successor_Key(x, k);
+                this.Move_Key(k1, z, x);
+                this.Move_Key(k, x, y);
+                this.B_Tree_Delete_Key(y, k);
+            } else {
+                this.Move_Key(k, x, y);
+                this.Merge_Nodes(y, z);
+                this.B_Tree_Delete_Key(y, k);
+            }
+        } else {
+            Nodo y = this.Preceding_Child(x);
+            Nodo z = this.Successor_Child(x);
+            Nodo w = this.getRaiz();
+            int v = this.Root_Key(x);
+            if(x.getN() > this.lowerBKeys()){
+                this.Remove_Key(x, k);
+            } else if (y.getN() > this.lowerBKeys()) {
+                int k1 = this.Find_Predecessor_Key(w, v);
+                this.Move_Key(k1, y, w);
+                k1 = this.Find_Successor_Key(w, v);
+                this.Move_Key(k1, w, x);
+                this.B_Tree_Delete_Key(x, k);
+            } else {
+                Nodo s = this.Find_Sibling(w);
+                Nodo w1 = (new TreeB(this.getM(),this.Root_Key(s))).getRaiz();
+                if(w1.getN() == this.lowerBKeys()) {
+                    this.Merge_Nodes(w1, w);
+                    this.Merge_Nodes(w, s);
+                    this.B_Tree_Delete_Key(x, k);
+                } else {
+                    this.Move_Key(v, w, x);
+                    this.B_Tree_Delete_Key(x, k);
+                }
+            }
+            
+        }
+    }
 
     public void imprimir_arbol(Nodo nodo_actual, int num) {
         //se debe iniciar num en 0 a la hora de llamar el metodo
