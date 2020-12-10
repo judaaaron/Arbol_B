@@ -131,15 +131,23 @@ public class TreeB {
 
     }
     
-    public Nodo Preceding_Child(Nodo x){
-        return null;
+    public Nodo Preceding_Child(Nodo x, int k){
+        int iy = x.getLlaves().indexOf(k);
+        Nodo y = x.getHijos().get(iy);
+        return y;
     }
     
-    public Nodo Successor_Child(Nodo x){
-        return null;
+    public Nodo Successor_Child(Nodo x, int k){
+        int iz = x.getLlaves().indexOf(k)+1;
+        Nodo z = x.getHijos().get(iz);
+        return z;
     }
     
     public Nodo Find_Sibling (Nodo x){
+        return null;
+    }
+    
+    public Nodo Find_Root(Nodo x) {
         return null;
     }
     
@@ -152,11 +160,15 @@ public class TreeB {
     }
     
     public int Find_Predecessor_Key(Nodo n, int k) {
-        return 0;
+        Nodo y = this.Preceding_Child(n, k);
+        int k1 = y.getLlaves().get(y.getN()-1);
+        return k1;
     }
     
     public int Find_Successor_Key(Nodo n, int k) {
-        return 0;
+        Nodo z = this.Successor_Child(n, k);
+        int k1 = z.getLlaves().get(0);
+        return k1;
     }
     
     public int Root_Key(Nodo n) {
@@ -170,8 +182,8 @@ public class TreeB {
     public void B_Tree_Delete_Key(Nodo x,int k){
         
         if(!x.isLeaf()){
-            Nodo y = this.Preceding_Child(x);
-            Nodo z = this.Successor_Child(x);
+            Nodo y = this.Preceding_Child(x,k);
+            Nodo z = this.Successor_Child(x,k);
             if(y.getN() > this.lowerBKeys()){
                 int k1 = this.Find_Predecessor_Key(x, k);
                 this.Move_Key(k1, y, x);
@@ -188,8 +200,8 @@ public class TreeB {
                 this.B_Tree_Delete_Key(y, k);
             }
         } else {
-            Nodo y = this.Preceding_Child(x);
-            Nodo z = this.Successor_Child(x);
+            Nodo y = this.Preceding_Child(x,k);
+            Nodo z = this.Successor_Child(x,k);
             Nodo w = this.getRaiz();
             int v = this.Root_Key(x);
             if(x.getN() > this.lowerBKeys()){
