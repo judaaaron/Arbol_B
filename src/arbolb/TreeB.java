@@ -134,7 +134,7 @@ public class TreeB {
     }
     
     private void Remove(Nodo x, int key) {
-        int pos = this.B_Tree_Search(x, key).getIndice();
+        int pos = x.getLlaves().subList(0, x.n).indexOf(key);
         if (pos != -1) {
             if (x.isLeaf()) {
                 int i = 0;

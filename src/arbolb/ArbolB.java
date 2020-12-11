@@ -36,6 +36,24 @@ public class ArbolB {
             }
         }
         tb.imprimir_arbol(tb.raiz, 0);
+        
+        int res;
+        System.out.print("Desea borrar una llave? \n"
+                + "1. si\n"
+                + "2. no\n"
+                + "respuesta: ");
+        res = leer.nextInt();
+        
+        if(res == 1) {
+            System.out.println("Que llave desea borrar ?: ");
+            res = leer.nextInt();
+            tb.Remove(res);
+            
+            System.out.println("La llave ha sido borrada");
+            
+            System.out.println("");
+            tb.imprimir_arbol(tb.getRaiz(), 0);
+        }
         /*NodoIndice ni = tb.B_Tree_Search(tb.getRaiz(), 8);
         
         System.out.println("Nodo: " + ni.getNodo() + "| Indice: " + ni.getIndice());*/
