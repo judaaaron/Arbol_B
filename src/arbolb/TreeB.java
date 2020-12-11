@@ -3,10 +3,12 @@ package arbolb;
 public class TreeB {
 
     int m;// orden del arbol
+    int T;
     Nodo raiz;
 
     public TreeB(int orden) {
         this.m = orden;
+        this.T = Math.floorDiv(orden,2);
         raiz = new Nodo(m);
         //this.t = (int) Math.ceil((orden + 1) / 2);// responsabilizar a Jose.
     }
@@ -40,7 +42,7 @@ public class TreeB {
 
     public int lowerBKeys() {
 
-        return m / 2;
+        return (m/2) - 1;
     }
 
     public int UpperBChild() {
@@ -131,101 +133,190 @@ public class TreeB {
 
     }
     
-    public Nodo Preceding_Child(Nodo x, int k){
-        int iy = x.getLlaves().indexOf(k);
-        Nodo y = x.getHijos().get(iy);
-        return y;
-    }
-    
-    public Nodo Successor_Child(Nodo x, int k){
-        int iz = x.getLlaves().indexOf(k)+1;
-        Nodo z = x.getHijos().get(iz);
-        return z;
-    }
-    
-    public Nodo Find_Sibling (Nodo x){
-        return null;
-    }
-    
-    public Nodo Find_Root(Nodo x) {
-        return null;
-    }
-    
-    public void Move_Key(int k, Nodo n1, Nodo n2){
-        
-    }
-    
-    public void Merge_Nodes(Nodo n1, Nodo n2) {
-        
-    }
-    
-    public int Find_Predecessor_Key(Nodo n, int k) {
-        Nodo y = this.Preceding_Child(n, k);
-        int k1 = y.getLlaves().get(y.getN()-1);
-        return k1;
-    }
-    
-    public int Find_Successor_Key(Nodo n, int k) {
-        Nodo z = this.Successor_Child(n, k);
-        int k1 = z.getLlaves().get(0);
-        return k1;
-    }
-    
-    public int Root_Key(Nodo n) {
-        return 0;
-    }
-    
-    public void Remove_Key(Nodo n, int k) {
-        
-    }
-    
-    public void B_Tree_Delete_Key(Nodo x,int k){
-        
-        if(!x.isLeaf()){
-            Nodo y = this.Preceding_Child(x,k);
-            Nodo z = this.Successor_Child(x,k);
-            if(y.getN() > this.lowerBKeys()){
-                int k1 = this.Find_Predecessor_Key(x, k);
-                this.Move_Key(k1, y, x);
-                this.Move_Key(k, x, z);
-                this.B_Tree_Delete_Key(z, k);
-            } else if(z.getN() > this.lowerBKeys()) {
-                int k1 = this.Find_Successor_Key(x, k);
-                this.Move_Key(k1, z, x);
-                this.Move_Key(k, x, y);
-                this.B_Tree_Delete_Key(y, k);
-            } else {
-                this.Move_Key(k, x, y);
-                this.Merge_Nodes(y, z);
-                this.B_Tree_Delete_Key(y, k);
+    private void Remove(Nodo x, int key) {
+        int pos = this.B_Tree_Search(x, key).getIndice();
+        if (pos != -1) {
+            if (x.isLeaf()) {
+                int i = 0;
+                for (i = 0; i < x.getN() && x.getLlaves().get(i) != key; i++) {
+                }
+                ;
+                for (; i < x.getN(); i++) {
+                    if (i != 2 * T - 2) {
+                        x.getLlaves().set(i, x.getLlaves().get(i+1));
+                    }
+                }
+                x.setN(x.getN()-1);
+                return;
+            }
+            if (!x.isLeaf()) {
+
+                Nodo pred = x.getHijos().get(pos);
+                int predKey = 0;
+                if (pred.getN() >= T) {
+                    for (;;) {
+                        if (pred.isLeaf()) {
+                            //System.out.println(pred.getN());
+                            predKey = pred.getLlaves().get(pred.getN()-1);
+                            break;
+                        } else {
+                            pred = pred.getHijos().get(pred.getN());
+                        }
+                    }
+                    Remove(pred, predKey);
+                    x.getLlaves().set(pos, predKey);
+                    return;
+                }
+
+                Nodo nextNode = x.getHijos().get(pos+1);
+                if (nextNode.n >= T) {
+                    int nextKey = nextNode.getLlaves().get(0);
+                    if (!nextNode.isLeaf()) {
+                        nextNode = nextNode.getHijos().get(0);
+                        for (;;) {
+                            if (nextNode.leaf) {
+                                nextKey = nextNode.getLlaves().get(nextNode.getN()-1);
+                                break;
+                            } else {
+                                nextNode = nextNode.getHijos().get(nextNode.getN());
+                            }
+                        }
+                    }
+                    Remove(nextNode, nextKey);
+                    x.getLlaves().set(pos, nextKey);
+                    return;
+                }
+
+                int temp = pred.getN() + 1;
+                pred.getLlaves().set(pred.n++,x.getLlaves().get(pos));
+                for (int i = 0, j = pred.getN(); i < nextNode.getN(); i++) {
+                    pred.getLlaves().set(j++, nextNode.getLlaves().get(i));
+                    pred.n++;
+                }
+                for (int i = 0; i < nextNode.n + 1; i++) {
+                    pred.getHijos().set(temp++, nextNode.getHijos().get(i));
+                }
+
+                x.getHijos().set(pos, pred);
+                for (int i = pos; i < x.n; i++) {
+                    if (i != 2 * T - 2) {
+                        x.getLlaves().set(i, x.getLlaves().get(i+1));
+                    }
+                }
+                for (int i = pos + 1; i < x.n + 1; i++) {
+                    if (i != 2 * T - 1) {
+                        x.getHijos().set(i, x.getHijos().get(i+1));
+                    }
+                }
+                x.n--;
+                if (x.n == 0) {
+                    if (x == raiz) {
+                        raiz = x.getHijos().get(0);
+                    }
+                    x = x.getHijos().get(0);
+                }
+                Remove(pred, key);
+                return;
             }
         } else {
-            Nodo y = this.Preceding_Child(x,k);
-            Nodo z = this.Successor_Child(x,k);
-            Nodo w = this.getRaiz();
-            int v = this.Root_Key(x);
-            if(x.getN() > this.lowerBKeys()){
-                this.Remove_Key(x, k);
-            } else if (y.getN() > this.lowerBKeys()) {
-                int k1 = this.Find_Predecessor_Key(w, v);
-                this.Move_Key(k1, y, w);
-                k1 = this.Find_Successor_Key(w, v);
-                this.Move_Key(k1, w, x);
-                this.B_Tree_Delete_Key(x, k);
-            } else {
-                Nodo s = this.Find_Sibling(w);
-                Nodo w1 = (new TreeB(this.getM(),this.Root_Key(s))).getRaiz();
-                if(w1.getN() == this.lowerBKeys()) {
-                    this.Merge_Nodes(w1, w);
-                    this.Merge_Nodes(w, s);
-                    this.B_Tree_Delete_Key(x, k);
-                } else {
-                    this.Move_Key(v, w, x);
-                    this.B_Tree_Delete_Key(x, k);
+            for (pos = 0; pos < x.n; pos++) {
+                if (x.getLlaves().get(pos) > key) {
+                    break;
                 }
             }
-            
+            Nodo tmp = x.getHijos().get(pos);
+            if (tmp.n >= T) {
+                Remove(tmp, key);
+                return;
+            }
+            if (true) {
+                Nodo nb = null;
+                int devider = -1;
+
+                if (pos != x.n && x.getHijos().get(pos+1).n >= T) {
+                    devider = x.getLlaves().get(pos);
+                    nb = x.getHijos().get(pos+1);
+                    x.getLlaves().set(pos, nb.getLlaves().get(0));
+                    tmp.getLlaves().set(tmp.n++, devider);
+                    tmp.getHijos().set(tmp.n, nb.getHijos().get(0));
+                    for (int i = 1; i < nb.n; i++) {
+                        nb.getLlaves().set(i-1, nb.getLlaves().get(i));
+                    }
+                    for (int i = 1; i <= nb.n; i++) {
+                        nb.getHijos().set(i-1, nb.getHijos().get(i));
+                    }
+                    nb.n--;
+                    Remove(tmp, key);
+                    return;
+                } else if (pos != 0 && x.getHijos().get(pos-1).n >= T) {
+
+                    devider = x.getLlaves().get(pos-1);
+                    nb = x.getHijos().get(pos-1);
+                    x.getLlaves().set(pos-1, nb.getLlaves().get(nb.n-1));
+                    Nodo child = nb.getHijos().get(nb.n);
+                    nb.n--;
+
+                    for (int i = tmp.n; i > 0; i--) {
+                        tmp.getLlaves().set(i, tmp.getLlaves().get(i-1));
+                    }
+                    tmp.getLlaves().set(0, devider);
+                    for (int i = tmp.n + 1; i > 0; i--) {
+                        tmp.getHijos().set(i, tmp.getHijos().get(i-1));
+                    }
+                    tmp.getHijos().set(0, child);
+                    tmp.n++;
+                    Remove(tmp, key);
+                    return;
+                } else {
+                    Nodo lt = null;
+                    Nodo rt = null;
+                    boolean last = false;
+                    if (pos != x.n) {
+                        devider = x.getLlaves().get(pos);
+                        lt = x.getHijos().get(pos);
+                        rt = x.getHijos().get(pos+1);
+                    } else {
+                        devider = x.getLlaves().get(pos-1);
+                        rt = x.getHijos().get(pos);
+                        lt = x.getHijos().get(pos-1);
+                        last = true;
+                        pos--;
+                    }
+                    for (int i = pos; i < x.n - 1; i++) {
+                        x.getLlaves().set(i, x.getLlaves().get(i+1));
+                    }
+                    for (int i = pos + 1; i < x.n; i++) {
+                        x.getHijos().set(i, x.getHijos().get(i+1));
+                    }
+                    x.n--;
+                    lt.getLlaves().set(lt.n++, devider);
+
+                    for (int i = 0, j = lt.n; i < rt.n + 1; i++, j++) {
+                        if (i < rt.n) {
+                            lt.getLlaves().set(j, rt.getLlaves().get(i));
+                        }
+                        lt.getHijos().set(j, rt.getHijos().get(i));
+                    }
+                    lt.n += rt.n;
+                    if (x.n == 0) {
+                        if (x == raiz) {
+                            raiz = x.getHijos().get(0);
+                        }
+                        x = x.getHijos().get(0);
+                    }
+                    Remove(lt, key);
+                    return;
+                }
+            }
         }
+    }
+
+    public void Remove(int key) {
+        Nodo x = this.B_Tree_Search(raiz, key).getNodo();
+        if (x == null) {
+            return;
+        }
+        Remove(raiz, key);
     }
 
     public void imprimir_arbol(Nodo nodo_actual, int num) {
