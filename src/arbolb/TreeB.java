@@ -42,7 +42,7 @@ public class TreeB {
 
     public int lowerBKeys() {
 
-        return (m/2) - 1;
+        return Math.max((m/2) - 1,1);
     }
 
     public int UpperBChild() {
